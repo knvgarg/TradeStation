@@ -1,11 +1,11 @@
-# from models import Transactions, Users
-# from connect import db
-# from flask_login import current_user
+from models import Users
+from connect import db
+from flask_login import current_user
 
 # all_data = Transactions.query.all()
-# all_data1 = Users.query.all()
-# # for row in all_data:
-#     # print(f"{row.id}, {row.description}, {row.cashFlow}, {row.cat}, {row.date}, {row.amount}, {row.userId}")
+all_data1 = Users.query.all()
+for row in all_data1:
+    print(f"{row.id}, {row.name}, {row.funds}, {row.address}, {row.mode}")
 
 # # for row in all_data1:
 #     # print(f"{row.profile_image}")
@@ -24,13 +24,13 @@
 # # print(monthlyTransactions)
 # # print(monthlyTransactions.cat)
 
-from datetime import datetime
+# from datetime import datetime
 
 # datetime object containing current date and time
-now = datetime.now()
- 
-print("now =", now)
+# now = datetime.now()
+
+# print("now =", now)
 
 # dd/mm/YY H:M:S
-dt_string = now.strftime("%H:%M:%S")
-print("date and time =", dt_string)
+# dt_string = now.strftime("%H:%M:%S")
+# print("date and time =", dt_string)

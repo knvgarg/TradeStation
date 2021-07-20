@@ -115,7 +115,7 @@ def profile():
         form.email.data = current_user.email
         form.funds.data = current_user.funds
         form.address.data = current_user.address
-        form.address.mode = current_user.mode
+        form.mode.data = current_user.mode
 
     return render_template("profile.html", proForm=form)
 

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Expense Tracker</title>
+    <title>TradeStation</title>
     <link rel="icon" type="image/x-icon" href="../static/img/favicon.ico" />
 
     <meta charset="utf-8">
@@ -69,7 +69,7 @@
                 {{mess}}
             </div>
             {% endfor %}
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data" class="form-group">
                 {{proForm.hidden_tag()}}
                 <div class="form-group row">
                     <label for="staticEmail" class="col-sm-2 col-form-label">Name</label>
@@ -98,7 +98,14 @@
                 <div class="form-group row">
                     <label for="inputPassword" class="col-sm-2 col-form-label">Mode</label>
                     <div class="col-sm-10">
-                        {{proForm.mode(class='form-control')}}
+                        <!-- {{proForm.mode(class='radio-inline')}} -->
+                        <table class="table">
+                        <tr>
+                            {% for subfield in proForm.mode %}
+                                <td><label class="radio-inline"> {{subfield}} {{subfield.label}} </label></td>
+                            {% endfor %}
+                        </tr>
+                        </table>
                     </div>
                 </div>
 
@@ -112,11 +119,11 @@
     </div>
 
 
-
-    <script src="{{ url_for('static', filename='js1/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js1/popperjs') }}"></script>
-    <script src="{{ url_for('static', filename='js1/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js1/main.js') }}"></script>
+    
+    <script src="{{ url_for('static', filename='js1/jquery.min.js') }}" wfd-invisible="true"></script>
+    <script src="{{ url_for('static', filename='js1/popperjs') }}" wfd-invisible="true"></script>
+    <script src="{{ url_for('static', filename='js1/bootstrap.min.js') }}" wfd-invisible="true"></script>
+    <script src="{{ url_for('static', filename='js1/main.js') }}" wfd-invisible="true"></script>
 </body>
 
 </html>

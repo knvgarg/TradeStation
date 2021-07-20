@@ -17,13 +17,12 @@ class Users(db.Model, UserMixin):
     pasword_hash = db.Column(db.String(128))
     id = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.String(128))
-    funds = db.Column(db.Integer, default = 0)
+    funds = db.Column(db.Integer, default=0)
     email = db.Column(db.String(64), unique=True, index=True)
-    mode = db.Column(db.Boolean, default=0) #0 is manual, 1 is automatic
+    mode = db.Column(db.Integer, default=0)  # 0 is manual, 1 is automatic
 
     def check_password(self, password):
         return check_password_hash(self.pasword_hash, password)
 
     def _repr_(self):
         return f"Username {self.username}"
-
