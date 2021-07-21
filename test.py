@@ -16,6 +16,7 @@ for row in all_data1:
 # print(type(uid))
 
 # today = datetime.today()
+# haha
 # datem = datetime(today.year, today.month, 1)
 # # print(today)
 # # print(datem)
