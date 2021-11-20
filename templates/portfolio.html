@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>TradeStation</title>
+  <meta charset="utf-8">
+  <link rel="icon" type="image/x-icon" href="../static/img/favicon.ico" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css1/style.css') }}">
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+</head>
+
+<body style="overflow-x: hidden;">
+
+  <div class="wrapper d-flex align-items-stretch">
+    <nav id="sidebar">
+      <div class="p-4 pt-5">
+        <a href="#" class="img logo"></a>
+        <h3 style="color: #f8b739; font-family: Poppins, Arial, sans-serif; text-align: center;">Hi
+          {{current_user.name}}</h3>
+        <br>
+        <br>
+        <ul class="list-unstyled components mb-5">
+
+          <li>
+            <a href="{{url_for('dashboard')}}">Dashboard</a>
+          </li>
+
+          <li class="active"> 
+            <a href="{{url_for('portfolio')}}">Portfolio</a>
+          </li>
+
+          <li>
+            <a href="{{url_for('orders')}}">Orders</a>
+          </li>
+
+          <li>
+            <a href="{{url_for('profile')}}">Profile</a>
+          </li>
+          <li>
+            <a href="{{url_for('instructions')}}">Instructions</a>
+          </li>
+          <li>
+            <a href="{{url_for('logout')}}">Sign Out</a>
+          </li>
+
+        </ul>
+
+      </div>
+    </nav>
+
+    <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5">
+
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+
+          <button type="button" id="sidebarCollapse" class="btn btn-primary">
+            <i class="fa fa-bars"></i>
+            <span class="sr-only">Toggle Menu</span>
+          </button>
+
+          <form action="search" , method="GET">
+            <div class="container h-50">
+                <div class="d-flex justify-content-center h-100">
+                    <input type="search" class="form-control ds-input" id="search-input" name="query"
+                        placeholder="Search..." aria-label="Search for..." autocomplete="off"
+                        data-docs-version="4.5" spellcheck="false" role="combobox" aria-autocomplete="list"
+                        aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0" dir="auto"
+                        style="position: relative; vertical-align: top;">
+                </div>
+            </div>
+        </form>
+
+        </div>
+      </nav>
+
+      
+      <br>
+
+      {% for mess in get_flashed_messages() %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <button
+          type="button"
+          class="fad close"
+          data-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        {{mess}}
+      </div>
+      {% endfor %}
+
+      <div class="row">
+      <div class="col-md-8">
+        <table class="table table-striped">
+          <thead class="thead-dark">
+              <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Stock</th>
+                  <th scope="col">Buy</th>
+                  <th scope="col">Sell</th>
+                  <th scope="col">Invested</th>
+                  <th scope="col">Current Value</th>
+                  
+              </tr>
+          </thead>
+          <tbody>
+              <!-- {%for r in trans_data%}
+              <tr>
+                  <th scope="row">{{loop.index0 + 1}}</th>
+                  <td>{{r.cat}}</td>
+                  {%if r.type == 1 %}
+                  <td>Bought</td>
+                  {%else%}
+                  <td>Sold</td>
+                  {%endif%}
+                  <td>{{r.date.strftime('%d-%m-%Y')}}</td>
+                  <td>{{r.price}}</td>
+                  <td>{{r.amount}}</td>
+              </tr>
+              {%endfor%} -->
+          </tbody>
+      </table>
+      </div>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <div class="col-sm-3">
+        <caption>Recommendations</caption>
+
+        <table class="table table-hover table-sm ">
+          <thead class="thead-light">
+              <tr>
+                  <th scope="col"></th>
+                  <th scope="col">Stock</th>   
+                  <th scope="col">Up/Down</th>                 
+
+              </tr>
+          </thead>
+          <tbody>
+              {%for r in recom%}
+              <tr data-toggle="modal" data-target="#image-modal">
+                  <th scope="row">{{loop.index0 + 1}}</th>
+                  <td>{{r}}</td>
+                  {%if recom[r]>=0%}
+                  <td style="color: green;">{{recom[r]}}%</td>
+                  {%elif recom[r]==0%}
+                  <td>{{recom[r]}}</td>
+                  {%else%}
+                  <td style="color: red;">{{recom[r]}}%</td>
+                  {%endif%}
+              </tr>
+              {%endfor%}
+          </tbody>
+      </table>
+      </div>
+      </div>
+     
+      </div>
+
+    </div>
+
+    <!-- modal  -->
+    <div class="modal fade" id="image-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <br>
+        <br>
+        <br>
+
+        <br>
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            ...
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js1/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js1/popperjs') }}"></script>
+    <script src="{{ url_for('static', filename='js1/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js1/main.js') }}"></script>
+</body>
+
+</html>

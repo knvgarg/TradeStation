@@ -19,7 +19,7 @@
     <div class="wrapper d-flex align-items-stretch">
         <nav id="sidebar">
             <div class="p-4 pt-5">
-                <a href="#" class="img logo rounded-circle mb-5"></a>
+                <a href="#" class="img logo"></a>
                 <h3 style="color: #f8b739; font-family: Poppins, Arial, sans-serif; text-align: center;">Hi
                     {{current_user.name}}</h3>
                 <br>
@@ -29,9 +29,13 @@
                     <li>
                         <a href="{{url_for('dashboard')}}">Dashboard</a>
                     </li>
+                    
+                    <li>
+                        <a href="{{url_for('portfolio')}}">Portfolio</a>
+                      </li>
 
                     <li class="active">
-                        <a href="{{url_for('passbook')}}">PassBook</a>
+                        <a href="{{url_for('orders')}}">Orders</a>
                     </li>
 
                     <li>
@@ -77,7 +81,7 @@
                     </form>
                 </div>
             </nav>
-            <!-- {% for mess in get_flashed_messages() %}
+            {% for mess in get_flashed_messages() %}
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
               <button
                 type="button"
@@ -89,8 +93,39 @@
               </button>
               {{mess}}
             </div>
-            {% endfor %} -->
+            {% endfor %}
             <br>
+
+            <table class="table table-striped table-sm">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Stock</th>
+                        <th scope="col">Bought/Sold</th>
+                        <th scope="col">Date (d/m/y)</th>
+                        <th scope="col">Price of Stock</th>
+                        <th scope="col">Amount</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for r in trans_data%}
+                    <tr>
+                        <th scope="row">{{loop.index0 + 1}}</th>
+                        <!-- <th scope="row">{{r.id}}</th> -->
+                        <td>{{r.cat}}</td>
+                        {%if r.type == 1 %}
+                        <td>Bought</td>
+                        {%else%}
+                        <td>Sold</td>
+                        {%endif%}
+                        <td>{{r.date.strftime('%d-%m-%Y')}}</td>
+                        <td>{{r.price}}</td>
+                        <td>{{r.amount}}</td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
         </div>
     </div>
 

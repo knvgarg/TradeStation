@@ -19,7 +19,7 @@
     <div class="wrapper d-flex align-items-stretch">
         <nav id="sidebar">
             <div class="p-4 pt-5">
-                <a href="#" class="img logo rounded-circle mb-5"></a>
+                <a href="#" class="img logo"></a>
                 <h3 style="color: #f8b739; font-family: Poppins, Arial, sans-serif; text-align: center;">Hi
                     {{current_user.name}}</h3>
                 <br>
@@ -30,9 +30,11 @@
                     <li>
                         <a href="{{url_for('dashboard')}}">Dashboard</a>
                     </li>
-
                     <li>
-                        <a href="{{url_for('passbook')}}">PassBook</a>
+                        <a href="{{url_for('portfolio')}}">Portfolio</a>
+                      </li>
+                    <li>
+                        <a href="{{url_for('orders')}}">Orders</a>
                     </li>
 
                     <li>

@@ -26,3 +26,22 @@ class Users(db.Model, UserMixin):
 
     def _repr_(self):
         return f"Username {self.username}"
+
+
+class Transactions(db.Model):
+
+    __searchable__ = ["stock", "amount", "date", "type"]
+    users = db.relationship(Users)
+    id = db.Column(db.Integer, primary_key=True)
+    price = db.Column(db.Integer)
+    amount = db.Column(db.Integer)
+    type = db.Column(db.Integer)
+    stock = db.Column(db.String(64))
+    date = db.Column(db.DateTime)
+    userId = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+    def _repr_(self):
+        return f"amount : {self.amount}\
+             ,cash : {self.type},\
+                       stock : {self.stock},\
+                            date : {self.date} "

@@ -19,9 +19,9 @@
 <body style="overflow-x: hidden;">
 
   <div class="wrapper d-flex align-items-stretch">
-    <nav id="sidebar">
+    <nav id="sidebar" style="overflow-y: hidden;">
       <div class="p-4 pt-5">
-        <a href="#" class="img logo rounded-circle mb-5"></a>
+        <a href="#" class="img logo"></a>
         <h3 style="color: #f8b739; font-family: Poppins, Arial, sans-serif; text-align: center;">Hi
           {{current_user.name}}</h3>
         <br>
@@ -31,9 +31,11 @@
           <li class="active">
             <a href="{{url_for('dashboard')}}">Dashboard</a>
           </li>
-
           <li>
-            <a href="{{url_for('passbook')}}">PassBook</a>
+            <a href="{{url_for('portfolio')}}">Portfolio</a>
+          </li>
+          <li>
+            <a href="{{url_for('orders')}}">Orders</a>
           </li>
 
           <li>
@@ -61,17 +63,70 @@
             <i class="fa fa-bars"></i>
             <span class="sr-only">Toggle Menu</span>
           </button>
-
-          <!-- <button class="btn btn-dark ml-auto d-inline-block" data-toggle="modal" data-target="#transaction">Add
-            Transaction</button> -->
-
         </div>
       </nav>
-      <div class="row">
+
+      {% for mess in get_flashed_messages() %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <button
+          type="button"
+          class="fad close"
+          data-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        {{mess}}
       </div>
-      <br>
-      <!-- </div> -->
-    </div>
+      {% endfor %}
+   
+      <div class="row">
+        <div class="col-md-auto">
+          <h4 style="font-family: Montserrat; color: #444;"><span style="color: grey; font-size: large;">Account Value &nbsp; </span>{{AccValue}}</h4>
+        </div>
+        <div class="col-md-auto">
+          <h4 style="font-family: Montserrat; color: #444;"><span style="color: grey; font-size: large;">Equity Holdings &nbsp; </span>{{Holdings}}</h4>
+        </div>
+        <div class="col-md-auto">
+          <h4 style="font-family: Montserrat; color: #444;"><span style="color: grey; font-size: large;">Invested &nbsp; </span>{{invested}}</h4>
+        </div>
+        
+        <div class="col-md-auto">
+          <h4 style="font-family: Montserrat; color: #444;"><span style="color: grey; font-size: large;">Balance &nbsp; </span>{{Balance}}</h4>
+        </div>
+        <div class="col-md-auto">
+          {%if profit>=0%}
+          <h4 style="font-family: Montserrat; color: #444;"><span style="color: grey; font-size: large;">Profit &nbsp; &nbsp; </span><span style="color: green;">{{profit}}%</span></h4>
+          {%else%}       
+          <h4 style="font-family: Montserrat; color: #444;"><span style="color: grey; font-size: large;">Loss &nbsp; &nbsp;</span><span style="color: red;">{{profit}}%</span></h4>
+          {%endif%}
+        </div>
+      </div>
+     <br>
+
+      <div class="row">
+        <div class="col-md-12">
+          <em
+              style="font-family: Montserrat; color: #444; font-weight: bold;">
+         Graph</em>
+          <div class="chart" id="baseGraph">
+            <script>
+              var graphs = {{ line1 | safe}};
+              Plotly.plot('baseGraph', graphs, {});
+            </script>
+          </div>
+          <div class="chart" id="baseGraph">
+            <script>
+              var graphs = {{ line2 | safe}};
+              Plotly.plot('baseGraph', graphs, {});
+            </script>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      </div>
+
 
     <script src="{{ url_for('static', filename='js1/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js1/popperjs') }}"></script>

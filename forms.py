@@ -17,12 +17,23 @@ from wtforms import (
 )
 from wtforms.validators import DataRequired, Email, EqualTo, Required
 from flask_wtf.file import FileField, FileAllowed
+from models import Users
+
+
+class addFunds(FlaskForm):
+    amount = IntegerField("amount", validators=[DataRequired()])
+    submit1 = SubmitField("Add Funds")
+
+
+class WithdrawFunds(FlaskForm):
+    amount = IntegerField("amount", validators=[DataRequired()])
+    submit2 = SubmitField("Withdraw")
 
 
 class profiles(FlaskForm):
     name = StringField("Name")
     email = StringField("Email")
-    funds = IntegerField("Funds", validators=[DataRequired()])
+    funds = IntegerField("Funds")
     address = StringField("Address")
     # mode = BooleanField('Mode')
     mode = RadioField(
