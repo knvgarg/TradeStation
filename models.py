@@ -45,3 +45,30 @@ class Transactions(db.Model):
              ,cash : {self.type},\
                        stock : {self.stock},\
                             date : {self.date} "
+
+
+class stockList(db.Model):
+    __searchable__ = ["stockname"]
+
+    users = db.relationship(Users)
+    id = db.Column(db.Integer, primary_key=True)
+    stockname = db.Column(db.String(64))
+    curr_value = db.Column(db.Integer)  # everyday changes
+    no_of_stocks = db.Column(db.Integer, default=0)
+    invested = db.Column(
+        db.Integer, default=0
+    )  # (value at time of buying)*(num of stocks)
+    userId = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+    def _repr_(self):
+        return f"stockname: {self.stockname} , curr_value: {self.curr_value}"
+
+
+class stockDailyValue(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sname = db.Column(db.String(64))
+    date = db.Column(db.DateTime)
+    value = db.Column(db.Integer)
+
+    def _repr_(self):
+        return f"stockname: {self.sname}, date:{self.date}, value: {self.value}"

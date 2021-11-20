@@ -81,9 +81,6 @@
         </div>
       </nav>
 
-      
-      <br>
-
       {% for mess in get_flashed_messages() %}
       <div class="alert alert-warning alert-dismissible fade show" role="alert">
         <button
@@ -99,38 +96,34 @@
       {% endfor %}
 
       <div class="row">
-      <div class="col-md-8">
-        <table class="table table-striped">
+      <div class="col-md-7">
+        <table class="table table-striped table-sm">
           <thead class="thead-dark">
               <tr>
                   <th scope="col">#</th>
                   <th scope="col">Stock</th>
+                  <th scope="col">Current Value</th>
+                  <th scope="col">Invested</th>
                   <th scope="col">Buy</th>
                   <th scope="col">Sell</th>
-                  <th scope="col">Invested</th>
-                  <th scope="col">Current Value</th>
                   
               </tr>
           </thead>
           <tbody>
-              <!-- {%for r in trans_data%}
+              {%for r in stockdata%}
               <tr>
                   <th scope="row">{{loop.index0 + 1}}</th>
-                  <td>{{r.cat}}</td>
-                  {%if r.type == 1 %}
-                  <td>Bought</td>
-                  {%else%}
-                  <td>Sold</td>
-                  {%endif%}
-                  <td>{{r.date.strftime('%d-%m-%Y')}}</td>
-                  <td>{{r.price}}</td>
-                  <td>{{r.amount}}</td>
+                  <td>{{r.stockname}}</td>
+                  <td>{{r.curr_value}}</td>
+                  <td>{{r.invested}}</td>
+                  <td><button type="button" class="btn-sm btn-outline-success form-control">Buy</button></td>
+                  <td><button type="button" class="btn-sm btn-outline-danger form-control">Sell</button></td>
               </tr>
-              {%endfor%} -->
+              {%endfor%}
           </tbody>
       </table>
       </div>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <div class="col-md-1"></div>
       <div class="col-sm-3">
         <caption>Recommendations</caption>
 
@@ -172,7 +165,6 @@
         <br>
         <br>
         <br>
-
         <br>
 
         <div class="modal-content">

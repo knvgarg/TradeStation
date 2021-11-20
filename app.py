@@ -3,12 +3,13 @@ from connect import app, db
 from flask import Flask, render_template, session, redirect, url_for, request, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from forms import loginForm, registrationForm, profiles, WithdrawFunds, addFunds
-from models import Users, Transactions
+from models import Users, Transactions, stockList
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_msearch import Search
 from datetime import datetime
 from graph_dashboard import mainGraph1, mainGraph2
 import operator, pickle
+from stock_list import function
 
 today = datetime.today()
 now = datetime.now()
@@ -38,6 +39,7 @@ def index():
 
             db.session.add(user)
             db.session.commit()
+
             flash("Thanks for registeration! Login to continue")
             return redirect(url_for("index"))
 
@@ -47,6 +49,8 @@ def index():
         if user is not None and user.check_password(LoginForm.password1.data):
 
             login_user(user)
+            function(current_user.id)
+
             # flash('Log in Success')
 
             next = request.args.get("next")
@@ -119,7 +123,12 @@ def portfolio():
     for obj in sorted_d:
         sorted_d[obj] = round(sorted_d[obj], 2)
 
-    return render_template("portfolio.html", recom=sorted_d)
+    uid = current_user.id
+    stockdata = stockList.query.filter_by(userId=uid).order_by(
+        stockList.invested.desc()
+    )
+
+    return render_template("portfolio.html", recom=sorted_d, stockdata=stockdata)
 
 
 @app.route("/orders", methods=["GET", "POST"])

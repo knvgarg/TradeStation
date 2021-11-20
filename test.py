@@ -1,4 +1,4 @@
-from models import Users
+from models import Users, stockList
 from connect import db
 from flask_login import current_user
 
@@ -7,8 +7,13 @@ all_data1 = Users.query.all()
 for row in all_data1:
     print(f"{row.id}, {row.name}, {row.funds}, {row.address}, {row.mode}")
 
+# user = Users.query.get(5)
+# db.session.delete(user)
+# db.session.commit()
+
 # # for row in all_data1:
 #     # print(f"{row.profile_image}")
+
 
 # from datetime import datetime
 # uid = current_user.id
