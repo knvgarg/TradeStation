@@ -11,75 +11,88 @@ import json
 
 today = datetime.today()
 
+
+def unique(list1):
+
+    # insert the list to the set
+    list_set = set(list1)
+    # convert the set to the list
+    unique_list = list(list_set)
+    return unique_list
+
+
 # account value1
 def main_graph1():
 
-    month = today.month
+    mp = {}
+    dstart = "2021-08-01"
+    # print(type(dstart))
+    mp[dstart] = 0
+    rows = (
+        Transactions.query.filter_by(userId=current_user.id)
+        .order_by(Transactions.date)
+        .all()
+    )
+    for r in rows:
+        dt = (r.date).strftime("%Y-%m-%d")
 
-    x = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-    ]
-    y = [0] * 12
-    y[2] = 1.5
-    y[3] = 2
-    y[4] = 4
-    y[5] = 4
-    y[6] = 4.5
-    y[7] = 4
-    y[8] = 4
-    y[9] = 5
-    y[10] = 4.8
-    y[11] = 4.7
-    # for idx, xi in enumerate(x):
-    #     y[idx] = current_user.budget - expenditure(idx + 1)
+        if dt in mp.keys():
+            if r.type == 0:
+                mp[dt] = mp[dt] + int(r.amount) + 10
+            else:
+                mp[dt] = mp[dt] - int(r.amount)
+        else:
+            if r.type == 0:
+                mp[dt] = int(r.amount) + 10
+            else:
+                mp[dt] = 0 - int(r.amount)
+
+    x = list(mp.keys())
+    y = list(mp.values())
+
+    for idx in range(1, len(x)):
+        y[idx] = y[idx - 1] + y[idx]
 
     return x, y
 
 
 # invested
 def main_graph2():
+    mp = {}
+    rows = (
+        Transactions.query.filter_by(userId=current_user.id)
+        .order_by(Transactions.date)
+        .all()
+    )
+    dstart = "2021-08-01"
+    # print(type(dstart))
+    mp[dstart] = 0
 
-    month = today.month
+    for r in rows:
+        dt = (r.date).strftime("%Y-%m-%d")
+        # print(type(dt))
+        if dt in mp.keys():
+            if r.type == 0:
+                mp[dt] = mp[dt] + int(r.amount)
+            else:
+                mp[dt] = mp[dt] - int(r.amount)
+        else:
+            if r.type == 0:
+                mp[dt] = int(r.amount)
+            else:
+                mp[dt] = 0 - int(r.amount)
 
-    x = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-    ]
-    y = [0] * 12
-    y[2] = 1.5
-    y[3] = 1.5
-    y[4] = 3
-    y[5] = 3
-    y[6] = 3
-    y[7] = 3
-    y[8] = 3
-    y[9] = 3.5
-    y[10] = 3.5
-    y[11] = 3.5
+        # v = mp[dt]
 
-    # for idx, xi in enumerate(x):
-    #     y[idx] = current_user.budget - expenditure(idx + 1)
+    # dend = str(today.year) + "-12-31"
+    # if not dend in mp.keys():
+    #     mp[dend] = v
+
+    x = list(mp.keys())
+    y = list(mp.values())
+
+    for idx in range(1, len(x)):
+        y[idx] = y[idx - 1] + y[idx]
 
     return x, y
 
@@ -100,7 +113,17 @@ def mainGraph2():
     x, y = main_graph2()
     df = pd.DataFrame({"x": x, "y": y})  # creating a sample dataframe
 
-    data = [go.Scatter(x=df["x"], y=df["y"], mode="lines", name="Invested")]
+    data = [
+        go.Scatter(
+            x=df["x"],
+            y=df["y"],
+            mode="lines",
+            name="Invested",
+        )
+    ]
+    # data.update_layout(
+    #     xaxis_range=[datetime.datetime(2021, 1, 1), datetime.datetime(2021, 12, 31)]
+    # )
     graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
 
     return graphJSON
