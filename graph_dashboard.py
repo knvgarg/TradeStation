@@ -25,7 +25,7 @@ def unique(list1):
 def main_graph1():
 
     mp = {}
-    dstart = "2021-08-01"
+    dstart = "2021-10-01"
     # print(type(dstart))
     mp[dstart] = 0
     rows = (
@@ -64,7 +64,7 @@ def main_graph2():
         .order_by(Transactions.date)
         .all()
     )
-    dstart = "2021-08-01"
+    dstart = "2021-10-01"
     # print(type(dstart))
     mp[dstart] = 0
 
