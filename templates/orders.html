@@ -68,11 +68,11 @@
                         <span class="sr-only">Toggle Menu</span>
                     </button>
 
-                    <form action="search" , method="GET">
+                    <form action="search2" , method="GET">
                         <div class="container h-50">
                             <div class="d-flex justify-content-center h-100">
-                                <input type="search" class="form-control ds-input" id="search-input" name="query"
-                                    placeholder="Search..." aria-label="Search for..." autocomplete="off"
+                                <input type="search" class="form-control ds-input" id="search-input" name="query2"
+                                    placeholder="Search stock or type..." aria-label="Search for..." autocomplete="off"
                                     data-docs-version="4.5" spellcheck="false" role="combobox" aria-autocomplete="list"
                                     aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0" dir="auto"
                                     style="position: relative; vertical-align: top;">
@@ -101,7 +101,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Stock</th>
-                        <th scope="col">Bought/Sold</th>
+                        <th scope="col">Type</th>
                         <th scope="col">Date (d/m/y)</th>
                         <th scope="col">Price of Stock</th>
                         <th scope="col">Amount</th>
@@ -113,8 +113,8 @@
                     <tr>
                         <th scope="row">{{loop.index0 + 1}}</th>
                         <!-- <th scope="row">{{r.id}}</th> -->
-                        <td>{{r.cat}}</td>
-                        {%if r.type == 1 %}
+                        <td>{{r.stock}}</td>
+                        {%if r.type == 0 %}
                         <td>Bought</td>
                         {%else%}
                         <td>Sold</td>

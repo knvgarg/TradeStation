@@ -1,11 +1,20 @@
-from models import Users, stockList
+from models import Transactions, Users, stockList
 from connect import db
 from flask_login import current_user
 
 # all_data = Transactions.query.all()
-all_data1 = Users.query.all()
-for row in all_data1:
-    print(f"{row.id}, {row.name}, {row.funds}, {row.address}, {row.mode}")
+# all_data1 = Users.query.filter_by(name="Pallavi").all()
+# for row in all_data1:
+# print(f"{row.id}, {row.name}, {row.funds}, {row.address}, {row.email}")
+
+# data = stockList.query.all()
+# keyword = "gail"
+# data = Transactions.query.filter(Transactions.stock == "GAIL").all()
+
+# for row in data:
+#     print("k")
+#     print((row.stock))
+#     print(f"{row.id}, {row.stockname}, {row.userId}, {row.invested}")
 
 # user = Users.query.get(5)
 # db.session.delete(user)
@@ -32,10 +41,11 @@ for row in all_data1:
 # from datetime import datetime
 
 # datetime object containing current date and time
-# now = datetime.now()
+# now = datetime.today()
 
 # print("now =", now)
 
 # dd/mm/YY H:M:S
-# dt_string = now.strftime("%H:%M:%S")
+# dt_string = now.strftime("%Y-%m-%d")
 # print("date and time =", dt_string)
+print(type(1))

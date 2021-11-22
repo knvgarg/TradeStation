@@ -116,8 +116,65 @@
                   <td>{{r.stockname}}</td>
                   <td>{{r.curr_value}}</td>
                   <td>{{r.invested}}</td>
-                  <td><button type="button" class="btn-sm btn-outline-success form-control">Buy</button></td>
-                  <td><button type="button" class="btn-sm btn-outline-danger form-control">Sell</button></td>
+                  <td><button type="button" class="btn-sm btn-outline-success form-control" data-toggle="modal" data-target="#buy{{r.id}}">Buy</button></td>
+                  <div class="modal fade" tabindex="-1" role="dialog" id="buy{{r.id}}">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">{{r.stockname}}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- <p>Are you sure you want to delete this Transaction ?</p> -->
+                                <form action="{{url_for('buy', row_id=r.id) }}" method="POST">
+                                  <div class="row form-group">
+                                    <div class="col-auto"> Enter the Number of stocks you want to Buy
+
+                                    </div>
+                                    <div class="col-sm-3">
+                                  <input type="number" class="form-control form-control-sm" min="1" name="qtybuy" required>
+
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <input class="btn btn-danger" type="submit" value="Buy" />
+                              </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                  <td><button type="button" class="btn-sm btn-outline-danger form-control" data-toggle="modal" data-target="#sell{{r.id}}">Sell</button></td>
+                  <div class="modal fade" tabindex="-1" role="dialog" id="sell{{r.id}}">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">{{r.stockname}}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{url_for('sell', row_id=r.id) }}" method="POST">
+                                  <div class="row form-group">
+                                    <div class="col-auto"> Enter the Number of stocks you want to Sell
+
+                                    </div>
+                                    <div class="col-sm-3">
+                                  <input type="number" class="form-control form-control-sm" min="1" name="qtysell" required>
+
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <input class="btn btn-danger" type="submit" value="Sell" />
+                              </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
               </tr>
               {%endfor%}
           </tbody>
@@ -181,6 +238,7 @@
         </div>
       </div>
     </div>
+    
 
     <script src="{{ url_for('static', filename='js1/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js1/popperjs') }}"></script>

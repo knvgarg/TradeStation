@@ -14,6 +14,19 @@ from stock_list import function
 today = datetime.today()
 now = datetime.now()
 
+dt_string = now.strftime("%Y-%m-%d")
+
+################################
+pickle_file = open("dictionary.pkl", "rb")
+objects = pickle.load(pickle_file)
+pickle_file.close()
+# print(type(objects))
+sorted_d = dict(sorted(objects.items(), key=operator.itemgetter(1), reverse=True))
+
+for obj in sorted_d:
+    sorted_d[obj] = round(sorted_d[obj], 2)
+###############################
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -70,14 +83,120 @@ def index():
 
 
 @app.route("/instructions")
+@login_required
 def instructions():
     return render_template("instructions.html")
+
+
+search = Search()
+search.init_app(app)
+
+
+@app.route("/search")
+@login_required
+def search():
+    keyword = request.args.get("query").upper()
+    # print(type(keyword))
+    data = stockList.query.filter_by(userId=current_user.id, stockname=keyword).all()
+    if not data:
+        flash("No such stock!")
+        return redirect(url_for("portfolio"))
+    return render_template("portfolio.html", stockdata=data, recom=sorted_d)
+
+
+@app.route("/search2")
+@login_required
+def search2():
+    keyword = request.args.get("query2").upper()
+    print(type(keyword))
+    # table = Transactions.query.filter_by(userId=current_user.id).all()
+    if keyword == "SOLD":
+        keyword = 1
+        data = Transactions.query.filter_by(userId=current_user.id, type=keyword).all()
+    elif keyword == "BOUGHT":
+        keyword = 0
+        data = Transactions.query.filter_by(userId=current_user.id, type=keyword).all()
+    else:
+        data = Transactions.query.filter_by(userId=current_user.id, stock=keyword).all()
+        if not data:
+            flash("Invalid Request")
+            return redirect(url_for("orders"))
+
+    return render_template("orders.html", trans_data=data)
 
 
 # @app.route("/test")
 # def test():
 #     bar = testchart()
 #     return render_template("test.html", plot=bar)
+
+
+@app.route("/<int:row_id>/buy", methods=["POST"])
+@login_required
+def buy(row_id):
+    # print(row_id)
+    if request.method == "POST":
+        qty = int(request.form.get("qtybuy"))
+        # print(qty)
+
+        stk = stockList.query.filter_by(id=row_id).first()
+        # print(stk.stockname)
+        if current_user.funds < qty * stk.curr_value:
+            flash("Not enough Funds!")
+        else:
+            current_user.funds = current_user.funds - qty * stk.curr_value
+            stk.invested = stk.invested + qty * stk.curr_value
+            stk.no_of_stocks = stk.no_of_stocks + qty
+            db.session.commit()
+
+            data = Transactions(
+                type=0,
+                stock=stk.stockname,
+                price=stk.curr_value,
+                amount=qty * stk.curr_value,
+                date=now,
+                userId=current_user.id,
+            )
+
+            db.session.add(data)
+            db.session.commit()
+
+            flash("Congratulations!!")
+    return redirect(url_for("portfolio"))
+
+
+@app.route("/<int:row_id>/sell", methods=["POST"])
+@login_required
+def sell(row_id):
+    # print(row_id)
+    if request.method == "POST":
+        qty = int(request.form.get("qtysell"))
+        # print(qty)
+
+        stk = stockList.query.filter_by(id=row_id).first()
+        # print(stk.stockname)
+        if stk.no_of_stocks < qty:
+            flash("You don't have enough Stocks!")
+        else:
+            current_user.funds = current_user.funds + qty * stk.curr_value
+            stk.invested = stk.invested - qty * stk.curr_value
+            stk.no_of_stocks = stk.no_of_stocks - qty
+            db.session.commit()
+
+            data = Transactions(
+                type=1,
+                stock=stk.stockname,
+                price=stk.curr_value,
+                amount=qty * stk.curr_value,
+                date=now,
+                userId=current_user.id,
+            )
+
+            db.session.add(data)
+            db.session.commit()
+
+            flash("Stock Sold Succesfully!")
+    return redirect(url_for("portfolio"))
 
 
 @app.route("/logout")
@@ -89,9 +208,17 @@ def logout():
 @app.route("/dashboard", methods=["GET", "POST"])
 @login_required
 def dashboard():
-    invested = 4000
+    invested = 0
+    data = stockList.query.filter_by(userId=current_user.id).all()
+    if data:
+        for d in data:
+            invested = invested + d.invested
+
     Holdings = 4500
-    profit = ((Holdings - invested) / invested) * 100
+    if invested > 0:
+        profit = ((Holdings - invested) / invested) * 100
+    else:
+        profit = 0
     profit = round(profit, 2)
     Balance = current_user.funds
     AccValue = Holdings + Balance
@@ -114,14 +241,6 @@ def dashboard():
 @app.route("/portfolio", methods=["GET", "POST"])
 @login_required
 def portfolio():
-    pickle_file = open("dictionary.pkl", "rb")
-    objects = pickle.load(pickle_file)
-    pickle_file.close()
-    print(type(objects))
-    sorted_d = dict(sorted(objects.items(), key=operator.itemgetter(1), reverse=True))
-
-    for obj in sorted_d:
-        sorted_d[obj] = round(sorted_d[obj], 2)
 
     uid = current_user.id
     stockdata = stockList.query.filter_by(userId=uid).order_by(

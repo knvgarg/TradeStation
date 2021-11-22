@@ -30,12 +30,12 @@ class Users(db.Model, UserMixin):
 
 class Transactions(db.Model):
 
-    __searchable__ = ["stock", "amount", "date", "type"]
+    __searchable__ = ["stock", "type"]
     users = db.relationship(Users)
     id = db.Column(db.Integer, primary_key=True)
     price = db.Column(db.Integer)
     amount = db.Column(db.Integer)
-    type = db.Column(db.Integer)
+    type = db.Column(db.Integer)  # 0buy #1sell
     stock = db.Column(db.String(64))
     date = db.Column(db.DateTime)
     userId = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
@@ -48,7 +48,7 @@ class Transactions(db.Model):
 
 
 class stockList(db.Model):
-    __searchable__ = ["stockname"]
+    # __searchable__ = ["stockname"]
 
     users = db.relationship(Users)
     id = db.Column(db.Integer, primary_key=True)
