@@ -5,7 +5,8 @@ from flask_login import login_user, logout_user, login_required, current_user
 from forms import loginForm, registrationForm, profiles, WithdrawFunds, addFunds
 from models import Users, Transactions, stockList
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_msearch import Search
+
+# from flask_msearch import Search
 from datetime import datetime
 from graph_dashboard import mainGraph1, mainGraph2
 import operator, pickle
@@ -88,8 +89,8 @@ def instructions():
     return render_template("instructions.html")
 
 
-search = Search()
-search.init_app(app)
+# search = Search()
+# search.init_app(app)
 
 
 @app.route("/search")
