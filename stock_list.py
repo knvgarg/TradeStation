@@ -1,6 +1,30 @@
-from models import stockList
+from datetime import date, datetime
+from models import stockList, stockDailyValue
 from connect import db
 from flask_login import current_user
+
+stocks = [
+    "CIPLA",
+    "ASIANPAINT",
+    "HDFCBANK",
+    "HCLTECH",
+    "BRITANNIA",
+    "HEROMOTOCO",
+    "AXISBANK",
+    "BHARTIARTL",
+    "GAIL",
+    "BAJFINANCE",
+    "ICICIBANK",
+    "INDUSINDBK",
+    "INFY",
+    "MARUTI",
+    "SBIN",
+    "RELIANCE",
+    "TCS",
+    "TATASTEEL",
+    "TITAN",
+    "TATAMOTORS",
+]
 
 
 def function(idd):
@@ -8,30 +32,20 @@ def function(idd):
     if user is not None:
         return
 
-    stocks = [
-        "CIPLA",
-        "ASIANPAINT",
-        "HDFCBANK",
-        "HCLTECH",
-        "BRITANNIA",
-        "HEROMOTOCO",
-        "AXISBANK",
-        "BHARTIARTL",
-        "GAIL",
-        "BAJFINANCE",
-        "ICICIBANK",
-        "INDUSINDBK",
-        "INFY",
-        "MARUTI",
-        "SBIN",
-        "RELIANCE",
-        "TCS",
-        "TATASTEEL",
-        "TITAN",
-        "TATAMOTORS",
-    ]
     for stock in stocks:
         stk = stockList(stockname=stock, curr_value=100, userId=idd)
         db.session.add(stk)
         db.session.commit()
         print("stock added")
+
+
+def changePrice():
+    now = "2021-11-23"
+    for stock in stocks:
+        stk = stockDailyValue(sname=stock, value=100, date=now)
+        db.session.add(stk)
+        db.session.commit()
+        print("stock added")
+
+
+# changePrice()

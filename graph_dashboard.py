@@ -1,5 +1,5 @@
 from connect import db
-from models import Transactions, Users
+from models import Transactions, Users, stockDailyValue
 from flask_login import current_user
 from datetime import datetime
 from sqlalchemy import func
@@ -11,6 +11,29 @@ import json
 
 today = datetime.today()
 
+stocks = {
+    "CIPLA": 0,
+    "ASIANPAINT": 0,
+    "HDFCBANK": 0,
+    "HCLTECH": 0,
+    "BRITANNIA": 0,
+    "HEROMOTOCO": 0,
+    "AXISBANK": 0,
+    "BHARTIARTL": 0,
+    "GAIL": 0,
+    "BAJFINANCE": 0,
+    "ICICIBANK": 0,
+    "INDUSINDBK": 0,
+    "INFY": 0,
+    "MARUTI": 0,
+    "SBIN": 0,
+    "RELIANCE": 0,
+    "TCS": 0,
+    "TATASTEEL": 0,
+    "TITAN": 0,
+    "TATAMOTORS": 0,
+}
+
 
 def unique(list1):
 
@@ -21,11 +44,11 @@ def unique(list1):
     return unique_list
 
 
-# account value1
+# equity
 def main_graph1():
 
     mp = {}
-    dstart = "2021-10-01"
+    dstart = "2021-11-01"
     # print(type(dstart))
     mp[dstart] = 0
     rows = (
@@ -36,14 +59,19 @@ def main_graph1():
     for r in rows:
         dt = (r.date).strftime("%Y-%m-%d")
 
+        num = int(r.amount) / int(r.price)
+        num = int(num)
+
+        rval = stockDailyValue.query.filter_by(date=dt, sname=r.stock).first()
+
         if dt in mp.keys():
             if r.type == 0:
-                mp[dt] = mp[dt] + int(r.amount) + 10
+                mp[dt] = mp[dt] + int(r.amount)
             else:
                 mp[dt] = mp[dt] - int(r.amount)
         else:
             if r.type == 0:
-                mp[dt] = int(r.amount) + 10
+                mp[dt] = int(r.amount)
             else:
                 mp[dt] = 0 - int(r.amount)
 
@@ -64,7 +92,7 @@ def main_graph2():
         .order_by(Transactions.date)
         .all()
     )
-    dstart = "2021-10-01"
+    dstart = "2021-11-01"
     # print(type(dstart))
     mp[dstart] = 0
 

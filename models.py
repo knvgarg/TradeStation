@@ -67,7 +67,7 @@ class stockList(db.Model):
 class stockDailyValue(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sname = db.Column(db.String(64))
-    date = db.Column(db.DateTime)
+    date = db.Column(db.String(64))
     value = db.Column(db.Integer)
 
     def _repr_(self):
