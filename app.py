@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 # from flask_msearch import Search
 from datetime import datetime
-from graph_dashboard import mainGraph1, mainGraph2
+from graph_dashboard import mainGraph1, mainGraph2, get_equity
 import operator, pickle
 from stock_list import function
 
@@ -88,9 +88,6 @@ def index():
 def instructions():
     return render_template("instructions.html")
 
-
-# search = Search()
-# search.init_app(app)
 
 
 @app.route("/search")
@@ -209,13 +206,16 @@ def logout():
 @app.route("/dashboard", methods=["GET", "POST"])
 @login_required
 def dashboard():
+    line1 = mainGraph1()
+    line2 = mainGraph2()
+
     invested = 0
     data = stockList.query.filter_by(userId=current_user.id).all()
     if data:
         for d in data:
             invested = invested + d.invested
 
-    Holdings = 4500
+    Holdings = get_equity()
     if invested > 0:
         profit = ((Holdings - invested) / invested) * 100
     else:
@@ -224,8 +224,7 @@ def dashboard():
     Balance = current_user.funds
     AccValue = Holdings + Balance
 
-    line1 = mainGraph1()
-    line2 = mainGraph2()
+
 
     return render_template(
         "dashboard.html",

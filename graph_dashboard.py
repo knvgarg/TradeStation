@@ -21,10 +21,8 @@ def unique(list1):
     return unique_list
 
 
-def numOfDays(date1, date2):
-    return (date2 - date1).days
 
-
+mp2 = {}
 # equity
 def main_graph1():
     #x,y
@@ -32,7 +30,8 @@ def main_graph1():
     #y - equity holding
     #EH - no. of stocks at that date * price of stock at that date(from StockDailyValue)
     #no. of stock at that date =
-    mp = {}
+    # mp = {}
+    mp2.clear()
     rows = (Transactions.query.filter_by(userId=current_user.id).order_by(
         Transactions.date).all())
     stocksUtil = {
@@ -70,19 +69,19 @@ def main_graph1():
                     sname=stock, date=prev_day).first()
                 if cur_price_row:
                     cur_price = int(cur_price_row.value)
-                    if prev_day not in mp.keys():
-                        mp[prev_day] = cur_price * stocksUtil[stock]
+                    if prev_day not in mp2.keys():
+                        mp2[prev_day] = cur_price * stocksUtil[stock]
                     else:
-                        mp[prev_day] += cur_price * stocksUtil[stock]
+                        mp2[prev_day] += cur_price * stocksUtil[stock]
 
             prev_day = cur_day
 
         if int(row.type) == 0:
             stocksUtil[row.stock] += no_of_stocks
-            print(f"{row.stock}: {stocksUtil[row.stock]}")
+            # print(f"{row.stock}: {stocksUtil[row.stock]}")
         else:
             stocksUtil[row.stock] -= no_of_stocks
-            print(f"{row.stock}: {stocksUtil[row.stock]}")
+            # print(f"{row.stock}: {stocksUtil[row.stock]}")
 
         if i == len(rows) - 1:
             for stock in stocksUtil.keys():
@@ -90,13 +89,13 @@ def main_graph1():
                     sname=stock, date=cur_day).first()
                 if cur_price_row:
                     cur_price = int(cur_price_row.value)
-                    if cur_day not in mp.keys():
-                        mp[cur_day] = cur_price * stocksUtil[stock]
+                    if cur_day not in mp2.keys():
+                        mp2[cur_day] = cur_price * stocksUtil[stock]
                     else:
-                        mp[cur_day] += cur_price * stocksUtil[stock]
+                        mp2[cur_day] += cur_price * stocksUtil[stock]
 
-    x = list(mp.keys())
-    y = list(mp.values())
+    x = list(mp2.keys())
+    y = list(mp2.values())
     return x, y
 
 
@@ -120,11 +119,6 @@ def main_graph2():
             else:
                 mp[dt] = 0 - int(r.amount)
 
-        # v = mp[dt]
-
-    # dend = str(today.year) + "-12-31"
-    # if not dend in mp.keys():
-    #     mp[dend] = v
 
     x = list(mp.keys())
     y = list(mp.values())
@@ -134,6 +128,15 @@ def main_graph2():
 
     return x, y
 
+def get_equity():
+    now=datetime.today()
+    now=now.strftime("%Y-%m-%d")
+    
+    if now in mp2.keys():
+        return mp2[now]
+    else:
+        v=list(mp2.keys())[-1]
+        return mp2[v]
 
 def mainGraph1():
 

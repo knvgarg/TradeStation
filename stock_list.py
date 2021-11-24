@@ -40,9 +40,9 @@ def function(idd):
 
 
 def changePrice():
-    now = "2021-11-23"
+    now = "2021-11-24"
     for stock in stocks:
-        stk = stockDailyValue(sname=stock, value=100, date=now)
+        stk = stockDailyValue(sname=stock, value=102, date=now)
         db.session.add(stk)
         db.session.commit()
         print("stock added")
