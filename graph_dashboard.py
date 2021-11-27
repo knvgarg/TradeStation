@@ -1,7 +1,7 @@
 from connect import db
 from models import Transactions, Users, stockDailyValue
 from flask_login import current_user
-from datetime import datetime, date
+from datetime import datetime
 from sqlalchemy import func
 import numpy as np
 import plotly
@@ -57,6 +57,7 @@ def main_graph1():
         "TATAMOTORS": 0,
     }
     prev_day = "hello"
+    curr_day = ""
     for i, row in enumerate(rows):
         no_of_stocks = int(row.amount) // int(row.price)
         # print(no_of_stocks)
@@ -94,8 +95,24 @@ def main_graph1():
                     else:
                         mp2[cur_day] += cur_price * stocksUtil[stock]
 
+
+    rem_days = db.session.query(stockDailyValue.date).filter(stockDailyValue.date>cur_day).distinct().order_by(stockDailyValue.date)
+
+    if rem_days:
+        for row in rem_days:
+            for stock in stocksUtil.keys():
+                cur_price_row = stockDailyValue.query.filter_by(sname=stock, date=row.date).first()
+                if cur_price_row:
+                    cur_price = int(cur_price_row.value)
+                    if row.date not in mp2.keys():
+                        mp2[row.date] = cur_price * stocksUtil[stock]
+                    else:
+                        mp2[row.date] += cur_price * stocksUtil[stock]
+            
+
     x = list(mp2.keys())
     y = list(mp2.values())
+
     return x, y
 
 
@@ -120,12 +137,18 @@ def main_graph2():
                 mp[dt] = 0 - int(r.amount)
 
 
+    # tod = datetime.today()
+    tod = today.strftime("%Y-%m-%d")
+
     x = list(mp.keys())
     y = list(mp.values())
 
     for idx in range(1, len(x)):
         y[idx] = y[idx - 1] + y[idx]
 
+    if tod not in mp.keys():
+        x.append(tod)
+        y.append(y[-1])
     return x, y
 
 def get_equity():

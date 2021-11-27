@@ -17,10 +17,13 @@ from flask_login import current_user
 #     print(f"{row.id}, {row.stockname}, {row.userId}, {row.invested}")
 # ------------------------------------------------------
 
+
 # ------------------------------------------------------
-data = stockDailyValue.query.all()
+# data = stockDailyValue.query.all()
+data = db.session.query(stockDailyValue.date).filter(stockDailyValue.date>"2021-11-23").distinct()
+# .filter(stockDailyValue.date > "2021-11-24")
 for row in data:
-    print(f"{row.id}, {row.sname}, {row.value}, {row.date}")
+    print(f"{row.date}")
 # --------------------------------------------------------
 
 
