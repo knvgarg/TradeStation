@@ -147,12 +147,13 @@ def buy(row_id):
             stk.no_of_stocks = stk.no_of_stocks + qty
             db.session.commit()
 
+            nw = now.strftime("%Y-%m-%d")
             data = Transactions(
                 type=0,
                 stock=stk.stockname,
                 price=stk.curr_value,
                 amount=qty * stk.curr_value,
-                date=now,
+                date=nw,
                 userId=current_user.id,
             )
 
@@ -180,13 +181,13 @@ def sell(row_id):
             stk.invested = stk.invested - qty * stk.curr_value
             stk.no_of_stocks = stk.no_of_stocks - qty
             db.session.commit()
-
+            nw = now.strftime("%Y-%m-%d")
             data = Transactions(
                 type=1,
                 stock=stk.stockname,
                 price=stk.curr_value,
                 amount=qty * stk.curr_value,
-                date=now,
+                date=nw,
                 userId=current_user.id,
             )
 

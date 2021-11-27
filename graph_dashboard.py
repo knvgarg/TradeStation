@@ -32,8 +32,7 @@ def main_graph1():
     #no. of stock at that date =
     # mp = {}
     mp2.clear()
-    rows = (Transactions.query.filter_by(userId=current_user.id).order_by(
-        Transactions.date).all())
+    ro = (Transactions.query.filter_by(userId=current_user.id).order_by(Transactions.date).first())
     stocksUtil = {
         "CIPLA": 0,
         "ASIANPAINT": 0,
@@ -57,57 +56,81 @@ def main_graph1():
         "TATAMOTORS": 0,
     }
     prev_day = "hello"
-    curr_day = ""
-    for i, row in enumerate(rows):
-        no_of_stocks = int(row.amount) // int(row.price)
-        # print(no_of_stocks)
-        cur_day = (row.date).strftime("%Y-%m-%d")
-        if cur_day == prev_day:
-            pass
-        else:
-            for stock in stocksUtil.keys():
-                cur_price_row = stockDailyValue.query.filter_by(
-                    sname=stock, date=prev_day).first()
-                if cur_price_row:
-                    cur_price = int(cur_price_row.value)
-                    if prev_day not in mp2.keys():
-                        mp2[prev_day] = cur_price * stocksUtil[stock]
-                    else:
-                        mp2[prev_day] += cur_price * stocksUtil[stock]
+    cur_day = ""
+    # for i, row in enumerate(rows):
+    #     no_of_stocks = int(row.amount) // int(row.price)
+    #     # print(no_of_stocks)
+    #     cur_day = (row.date).strftime("%Y-%m-%d")
+    #     if cur_day == prev_day:
+    #         pass
+    #     else:
+    #         for stock in stocksUtil.keys():
+    #             cur_price_row = stockDailyValue.query.filter_by(
+    #                 sname=stock, date=prev_day).first()
+    #             if cur_price_row:
+    #                 cur_price = int(cur_price_row.value)
+    #                 if prev_day not in mp2.keys():
+    #                     mp2[prev_day] = cur_price * stocksUtil[stock]
+    #                 else:
+    #                     mp2[prev_day] += cur_price * stocksUtil[stock]
 
-            prev_day = cur_day
+    #         prev_day = cur_day
 
-        if int(row.type) == 0:
-            stocksUtil[row.stock] += no_of_stocks
-            # print(f"{row.stock}: {stocksUtil[row.stock]}")
-        else:
-            stocksUtil[row.stock] -= no_of_stocks
-            # print(f"{row.stock}: {stocksUtil[row.stock]}")
+    #     if int(row.type) == 0:
+    #         stocksUtil[row.stock] += no_of_stocks
+    #         # print(f"{row.stock}: {stocksUtil[row.stock]}")
+    #     else:
+    #         stocksUtil[row.stock] -= no_of_stocks
+    #         # print(f"{row.stock}: {stocksUtil[row.stock]}")
 
-        if i == len(rows) - 1:
-            for stock in stocksUtil.keys():
-                cur_price_row = stockDailyValue.query.filter_by(
-                    sname=stock, date=cur_day).first()
-                if cur_price_row:
-                    cur_price = int(cur_price_row.value)
-                    if cur_day not in mp2.keys():
-                        mp2[cur_day] = cur_price * stocksUtil[stock]
-                    else:
-                        mp2[cur_day] += cur_price * stocksUtil[stock]
+    #     if i == len(rows) - 1:
+    #         for stock in stocksUtil.keys():
+    #             cur_price_row = stockDailyValue.query.filter_by(
+    #                 sname=stock, date=cur_day).first()
+    #             if cur_price_row:
+    #                 cur_price = int(cur_price_row.value)
+    #                 if cur_day not in mp2.keys():
+    #                     mp2[cur_day] = cur_price * stocksUtil[stock]
+    #                 else:
+    #                     mp2[cur_day] += cur_price * stocksUtil[stock]
 
-
-    rem_days = db.session.query(stockDailyValue.date).filter(stockDailyValue.date>cur_day).distinct().order_by(stockDailyValue.date)
-
+    # dt = (ro.date).strftime("%Y-%m-%d")
+    rem_days = db.session.query(stockDailyValue.date).filter(stockDailyValue.date>=ro.date).distinct().order_by(stockDailyValue.date).all()
+    # print(type(ro.date))
     if rem_days:
-        for row in rem_days:
-            for stock in stocksUtil.keys():
-                cur_price_row = stockDailyValue.query.filter_by(sname=stock, date=row.date).first()
-                if cur_price_row:
-                    cur_price = int(cur_price_row.value)
-                    if row.date not in mp2.keys():
-                        mp2[row.date] = cur_price * stocksUtil[stock]
-                    else:
-                        mp2[row.date] += cur_price * stocksUtil[stock]
+        for r in rem_days:
+            # print(r.date)
+            trans = Transactions.query.filter_by(userId=current_user.id, date=r.date).order_by(Transactions.date).all()
+            for i,row in enumerate(trans):
+                no_of_stocks = int(row.amount) // int(row.price)
+
+
+                if int(row.type) == 0:
+                    stocksUtil[row.stock] += no_of_stocks
+                    # print(f"{row.stock}: {stocksUtil[row.stock]}")
+                else:
+                    stocksUtil[row.stock] -= no_of_stocks
+                    # print(f"{row.stock}: {stocksUtil[row.stock]}")
+
+                if i == len(trans) - 1:
+                    for stock in stocksUtil.keys():
+                        cur_price_row = stockDailyValue.query.filter_by(sname=stock, date=r.date).first()
+                        if cur_price_row:
+                            cur_price = int(cur_price_row.value)
+                            if r.date not in mp2.keys():
+                                mp2[r.date] = cur_price * stocksUtil[stock]
+                            else:
+                                mp2[r.date] += cur_price * stocksUtil[stock]
+
+            if not trans:
+                for stock in stocksUtil.keys():
+                    cur_price_row = stockDailyValue.query.filter_by(sname=stock, date=r.date).first()
+                    if cur_price_row:
+                        cur_price = int(cur_price_row.value)
+                        if r.date not in mp2.keys():
+                            mp2[r.date] = cur_price * stocksUtil[stock]
+                        else:
+                            mp2[r.date] += cur_price * stocksUtil[stock]
             
 
     x = list(mp2.keys())
@@ -123,7 +146,7 @@ def main_graph2():
         Transactions.date).all())
 
     for r in rows:
-        dt = (r.date).strftime("%Y-%m-%d")
+        dt = (r.date)
         # print(type(dt))
         if dt in mp.keys():
             if r.type == 0:

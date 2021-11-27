@@ -37,7 +37,7 @@ class Transactions(db.Model):
     amount = db.Column(db.Integer)
     type = db.Column(db.Integer)  # 0buy #1sell
     stock = db.Column(db.String(64))
-    date = db.Column(db.DateTime)
+    date = db.Column(db.String(64))
     userId = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     def _repr_(self):
@@ -72,3 +72,15 @@ class stockDailyValue(db.Model):
 
     def _repr_(self):
         return f"stockname: {self.sname}, date:{self.date}, value: {self.value}"
+
+
+# class equity(db.Model):
+#     users = db.relationship(Users)
+#     id = db.Column(db.Integer, primary_key=True)
+#     date = db.Column(db.String(64))
+#     value = db.Column(db.Integer)
+#     userId = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+
+#     def _repr_(self):
+#         return f"stockname: {self.sname}, date:{self.date}, value: {self.value}"
