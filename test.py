@@ -28,9 +28,9 @@ from flask_login import current_user
     # print(f"{row.date}")
 # --------------------------------------------------------
 # data = Transactions.query.all()
-data = Transactions.query.filter_by(userId=2, date="2021-11-21").order_by(Transactions.date).all()
-for row in data:
-    print(f"{row.id}, {row.stock}, {row.userId}, {row.date}")
+# data = Transactions.query.filter_by(userId=2, date="2021-11-21").order_by(Transactions.date).all()
+# for row in data:
+    # print(f"{row.id}, {row.stock}, {row.userId}, {row.date}")
 # -------------------------------------------------------
 # users = stockDailyValue.query.all()
 # db.session.query(stockDailyValue).delete()

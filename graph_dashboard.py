@@ -142,22 +142,29 @@ def main_graph1():
 # invested
 def main_graph2():
     mp = {}
-    rows = (Transactions.query.filter_by(userId=current_user.id).order_by(
-        Transactions.date).all())
+    
+    ro = (Transactions.query.filter_by(userId=current_user.id).order_by(Transactions.date).first())
+    rem_days = db.session.query(stockDailyValue.date).filter(stockDailyValue.date>=ro.date).distinct().order_by(stockDailyValue.date).all()
 
-    for r in rows:
-        dt = (r.date)
-        # print(type(dt))
-        if dt in mp.keys():
-            if r.type == 0:
-                mp[dt] = mp[dt] + int(r.amount)
+    for day in rem_days:
+        rows = (Transactions.query.filter_by(userId=current_user.id,date=day.date).order_by(
+            Transactions.date).all())
+        for r in rows:
+            dt = (r.date)
+            # print(type(dt))
+            if dt in mp.keys():
+                if r.type == 0:
+                    mp[dt] = mp[dt] + int(r.amount)
+                else:
+                    mp[dt] = mp[dt] - int(r.amount)
             else:
-                mp[dt] = mp[dt] - int(r.amount)
-        else:
-            if r.type == 0:
-                mp[dt] = int(r.amount)
-            else:
-                mp[dt] = 0 - int(r.amount)
+                if r.type == 0:
+                    mp[dt] = int(r.amount)
+                else:
+                    mp[dt] = 0 - int(r.amount)
+
+        if not rows:
+            mp[day.date]=0
 
 
     # tod = datetime.today()
