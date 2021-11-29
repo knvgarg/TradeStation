@@ -8,22 +8,14 @@ stocks = [
     "ASIANPAINT",
     "HDFCBANK",
     "HCLTECH",
-    "BRITANNIA",
-    "HEROMOTOCO",
-    "AXISBANK",
-    "BHARTIARTL",
     "GAIL",
-    "BAJFINANCE",
     "ICICIBANK",
     "INDUSINDBK",
-    "INFY",
     "MARUTI",
     "SBIN",
     "RELIANCE",
     "TCS",
-    "TATASTEEL",
     "TITAN",
-    "TATAMOTORS",
 ]
 
 
@@ -33,16 +25,16 @@ def function(idd):
         return
 
     for stock in stocks:
-        stk = stockList(stockname=stock, curr_value=100, userId=idd)
+        stk = stockList(stockname=stock, curr_value=0, userId=idd)
         db.session.add(stk)
         db.session.commit()
         print("stock added")
 
 
 def changePrice():
-    now = "2021-11-26"
+    now = "2021-11-28"
     for stock in stocks:
-        stk = stockDailyValue(sname=stock, value=92, date=now)
+        stk = stockDailyValue(sname=stock, value=0, date=now)
         db.session.add(stk)
         db.session.commit()
         print("stock added")

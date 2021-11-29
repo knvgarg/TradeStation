@@ -11,6 +11,7 @@ from datetime import datetime
 from graph_dashboard import mainGraph1, mainGraph2, get_equity
 import operator, pickle
 from stock_list import function
+from soup import refresh_prices
 
 today = datetime.today()
 now = datetime.now()
@@ -40,9 +41,7 @@ def index():
 
         if user is not None:
             flash("Email Id already registered!")
-
         else:
-
             passw = generate_password_hash(RegistrationForm.password2.data)
 
             user = Users(
@@ -53,7 +52,6 @@ def index():
 
             db.session.add(user)
             db.session.commit()
-
             flash("Thanks for registeration! Login to continue")
             return redirect(url_for("index"))
 
@@ -65,8 +63,6 @@ def index():
             login_user(user)
             function(current_user.id)
 
-            # flash('Log in Success')
-
             next = request.args.get("next")
 
             if next == None or not next[0] == "/":
@@ -76,7 +72,6 @@ def index():
 
         elif user is None:
             flash("Email Id not registered!")
-
         else:
             flash("Wrong Password!")
 
@@ -87,7 +82,6 @@ def index():
 @login_required
 def instructions():
     return render_template("instructions.html")
-
 
 
 @app.route("/search")
@@ -207,6 +201,7 @@ def logout():
 @app.route("/dashboard", methods=["GET", "POST"])
 @login_required
 def dashboard():
+    # refresh_prices()
     line1 = mainGraph1()
     line2 = mainGraph2()
 
@@ -225,8 +220,6 @@ def dashboard():
     Balance = current_user.funds
     AccValue = Holdings + Balance
 
-
-
     return render_template(
         "dashboard.html",
         invested=invested,
@@ -242,6 +235,8 @@ def dashboard():
 @app.route("/portfolio", methods=["GET", "POST"])
 @login_required
 def portfolio():
+
+    refresh_prices()
 
     uid = current_user.id
     stockdata = stockList.query.filter_by(userId=uid).order_by(

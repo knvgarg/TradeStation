@@ -17,7 +17,7 @@ class Users(db.Model, UserMixin):
     pasword_hash = db.Column(db.String(128))
     id = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.String(128))
-    funds = db.Column(db.Integer, default=0)
+    funds = db.Column(db.Float, default=0)
     email = db.Column(db.String(64), unique=True, index=True)
     mode = db.Column(db.Integer, default=0)  # 0 is manual, 1 is automatic
 
@@ -33,8 +33,8 @@ class Transactions(db.Model):
     __searchable__ = ["stock", "type"]
     users = db.relationship(Users)
     id = db.Column(db.Integer, primary_key=True)
-    price = db.Column(db.Integer)
-    amount = db.Column(db.Integer)
+    price = db.Column(db.Float)
+    amount = db.Column(db.Float)
     type = db.Column(db.Integer)  # 0buy #1sell
     stock = db.Column(db.String(64))
     date = db.Column(db.String(64))
@@ -53,10 +53,10 @@ class stockList(db.Model):
     users = db.relationship(Users)
     id = db.Column(db.Integer, primary_key=True)
     stockname = db.Column(db.String(64))
-    curr_value = db.Column(db.Integer)  # everyday changes
+    curr_value = db.Column(db.Float)  # everyday changes
     no_of_stocks = db.Column(db.Integer, default=0)
     invested = db.Column(
-        db.Integer, default=0
+        db.Float, default=0
     )  # (value at time of buying)*(num of stocks)
     userId = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
@@ -68,19 +68,7 @@ class stockDailyValue(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sname = db.Column(db.String(64))
     date = db.Column(db.String(64))
-    value = db.Column(db.Integer)
+    value = db.Column(db.Float)
 
     def _repr_(self):
         return f"stockname: {self.sname}, date:{self.date}, value: {self.value}"
-
-
-# class equity(db.Model):
-#     users = db.relationship(Users)
-#     id = db.Column(db.Integer, primary_key=True)
-#     date = db.Column(db.String(64))
-#     value = db.Column(db.Integer)
-#     userId = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-
-
-#     def _repr_(self):
-#         return f"stockname: {self.sname}, date:{self.date}, value: {self.value}"
