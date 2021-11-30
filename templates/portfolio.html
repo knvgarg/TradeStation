@@ -14,8 +14,25 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css1/style.css') }}">
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
-</head>
+  <script src="{{ url_for('static', filename='js1/jquery.min.js') }}"></script>
 
+</head>
+<script>
+  $(document).ready(function(){ 
+    var dt = new Date();
+    var time = dt.getHours() + ":" + dt.getMinutes();
+    // alert(time)
+    var sttime = '09:00';
+    var endtime = '17:00';
+    if(time > sttime && time < endtime){
+
+    }
+    else{
+      $(".buybtn").prop("disabled",true); 
+        $(".sellbtn").prop("disabled",true); 
+    }
+});
+</script>
 <body style="overflow-x: hidden;">
 
   <div class="wrapper d-flex align-items-stretch">
@@ -104,6 +121,7 @@
                   <th scope="col">Stock</th>
                   <th scope="col">Current Value</th>
                   <th scope="col">Invested</th>
+                  <th scope="col">Quantity</th>
                   <th scope="col">Buy</th>
                   <th scope="col">Sell</th>
                   
@@ -116,7 +134,8 @@
                   <td>{{r.stockname}}</td>
                   <td>{{r.curr_value}}</td>
                   <td>{{r.invested}}</td>
-                  <td><button type="button" class="btn-sm btn-outline-success form-control" data-toggle="modal" data-target="#buy{{r.id}}">Buy</button></td>
+                  <td>{{r.no_of_stocks}}</td>
+                  <td><button type="button"  class="btn-sm btn-outline-success form-control buybtn"  data-toggle="modal" data-target="#buy{{r.id}}">Buy</button></td>
                   <div class="modal fade" tabindex="-1" role="dialog" id="buy{{r.id}}">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -146,7 +165,7 @@
                         </div>
                     </div>
                 </div>
-                  <td><button type="button" class="btn-sm btn-outline-danger form-control" data-toggle="modal" data-target="#sell{{r.id}}">Sell</button></td>
+                  <td><button type="button" class="btn-sm btn-outline-danger form-control sellbtn" data-toggle="modal" data-target="#sell{{r.id}}">Sell</button></td>
                   <div class="modal fade" tabindex="-1" role="dialog" id="sell{{r.id}}">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -238,10 +257,10 @@
 
     </div>
 
-    <script src="{{ url_for('static', filename='js1/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js1/popperjs') }}"></script>
     <script src="{{ url_for('static', filename='js1/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js1/main.js') }}"></script>
-</body>
+
+    </body>
 
 </html>

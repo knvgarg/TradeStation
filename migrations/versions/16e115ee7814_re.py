@@ -1,8 +1,8 @@
-"""new
+"""re
 
-Revision ID: 5a5b941b4cc9
+Revision ID: 16e115ee7814
 Revises: 
-Create Date: 2021-11-21 20:44:33.303222
+Create Date: 2021-11-29 19:44:20.217431
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5a5b941b4cc9'
+revision = '16e115ee7814'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,8 +21,8 @@ def upgrade():
     op.create_table('stock_daily_value',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('sname', sa.String(length=64), nullable=True),
-    sa.Column('date', sa.DateTime(), nullable=True),
-    sa.Column('value', sa.Integer(), nullable=True),
+    sa.Column('date', sa.String(length=64), nullable=True),
+    sa.Column('value', sa.Float(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users',
@@ -30,7 +30,7 @@ def upgrade():
     sa.Column('pasword_hash', sa.String(length=128), nullable=True),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('address', sa.String(length=128), nullable=True),
-    sa.Column('funds', sa.Integer(), nullable=True),
+    sa.Column('funds', sa.Float(), nullable=True),
     sa.Column('email', sa.String(length=64), nullable=True),
     sa.Column('mode', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
@@ -39,20 +39,20 @@ def upgrade():
     op.create_table('stock_list',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('stockname', sa.String(length=64), nullable=True),
-    sa.Column('curr_value', sa.Integer(), nullable=True),
+    sa.Column('curr_value', sa.Float(), nullable=True),
     sa.Column('no_of_stocks', sa.Integer(), nullable=True),
-    sa.Column('invested', sa.Integer(), nullable=True),
+    sa.Column('invested', sa.Float(), nullable=True),
     sa.Column('userId', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['userId'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('transactions',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('price', sa.Integer(), nullable=True),
-    sa.Column('amount', sa.Integer(), nullable=True),
+    sa.Column('price', sa.Float(), nullable=True),
+    sa.Column('amount', sa.Float(), nullable=True),
     sa.Column('type', sa.Integer(), nullable=True),
     sa.Column('stock', sa.String(length=64), nullable=True),
-    sa.Column('date', sa.DateTime(), nullable=True),
+    sa.Column('date', sa.String(length=64), nullable=True),
     sa.Column('userId', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['userId'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')

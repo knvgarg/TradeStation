@@ -192,6 +192,13 @@ def sell(row_id):
     return redirect(url_for("portfolio"))
 
 
+@app.route("/refresh", methods=["GET", "POST"])
+@login_required
+def refresh():
+    refresh_prices()
+    return redirect(url_for("dashboard"))
+
+
 @app.route("/logout")
 def logout():
     logout_user()
@@ -217,8 +224,8 @@ def dashboard():
     else:
         profit = 0
     profit = round(profit, 2)
-    Balance = current_user.funds
-    AccValue = Holdings + Balance
+    Balance = round(current_user.funds, 2)
+    AccValue = round(Holdings + Balance, 2)
 
     return render_template(
         "dashboard.html",
@@ -236,7 +243,7 @@ def dashboard():
 @login_required
 def portfolio():
 
-    refresh_prices()
+    # refresh_prices()
 
     uid = current_user.id
     stockdata = stockList.query.filter_by(userId=uid).order_by(
@@ -279,7 +286,10 @@ def profile():
 
     if pform.validate_on_submit():
         current_user.address = pform.address.data
-        current_user.mode = pform.mode.data
+        if pform.mode.data == 1:
+            flash("Work in progress for Automatic Mode")
+
+        current_user.mode = 0
         db.session.commit()
         flash("User Account Updated")
         return redirect(url_for("profile"))
@@ -287,7 +297,7 @@ def profile():
     elif request.method == "GET":
         pform.name.data = current_user.name
         pform.email.data = current_user.email
-        pform.funds.data = current_user.funds
+        pform.funds.data = round(current_user.funds, 2)
         pform.address.data = current_user.address
         pform.mode.data = current_user.mode
 
