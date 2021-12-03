@@ -223,6 +223,8 @@ def dashboard():
         profit = ((Holdings - invested) / invested) * 100
     else:
         profit = 0
+
+    invested = round(invested, 2)
     profit = round(profit, 2)
     Balance = round(current_user.funds, 2)
     AccValue = round(Holdings + Balance, 2)
