@@ -27,7 +27,7 @@ directory = "datasets\\"
 path = os.path.join(cwd, directory)
 dataset_path = path
 close_price_path = os.path.join(cwd, "close_prices\\")
-models_path = os.path.join(cwd, "models\\")
+models_path = os.path.join(cwd, "trainedModels\\")
 # dataset_path = '/content/gdrive/My Drive/datasets/'
 # dataset_path = r"E:\TradeStation\TradeStation\datasets"
 # close_price_path = r"E:\TradeStation\TradeStation\close_prices"
@@ -204,5 +204,7 @@ def percent_change_dic():
         profit_dic[key] = percent_change
     return profit_dic
 
+
+# retrain_model()
 prof = percent_change_dic()
 print(prof)
