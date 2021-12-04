@@ -6,7 +6,7 @@
 """
 IMPORTS
 """
-
+import tensorflow as tf
 import os
 import pandas as pd
 import numpy as np
@@ -22,17 +22,22 @@ import requests
 """
 PATHS
 """
-cwd = os.getcwd()
-directory = "datasets\\"
-path = os.path.join(cwd, directory)
-dataset_path = path
-close_price_path = os.path.join(cwd, "close_prices\\")
-models_path = os.path.join(cwd, "trainedModels\\")
+# cwd = os.getcwd()
+dirname = os.path.dirname(__file__)
+dataset_path = os.path.join(dirname, "datasets\\")
+close_price_path = os.path.join(dirname, "close_prices\\")
+models_path = os.path.join(dirname, "trainedModels\\")
+
+# directory = "datasets\\"
+# path = os.path.join(cwd, directory)
+# dataset_path = path
+# close_price_path = os.path.join(cwd, "close_prices\\")
+# models_path = os.path.join(cwd, "trainedModels\\")
 # dataset_path = '/content/gdrive/My Drive/datasets/'
-# dataset_path = r"E:\TradeStation\TradeStation\datasets"
-# close_price_path = r"E:\TradeStation\TradeStation\close_prices"
+# dataset_path = "C:\\Users\\knvga\\Desktop\\Projects\\TradeStation\\datasets\\"
+# close_price_path = "C:\\Users\\knvga\\Desktop\\Projects\\TradeStation\\close_prices\\"
 # close_price_path = '/content/gdrive/My Drive/close_prices/'
-# models_path = r"E:\TradeStation\TradeStation\models"
+# models_path = "..\\trainedModels\\"
 
 ###########################################################
 
@@ -113,8 +118,19 @@ def retrain_model():
         # Train the model
         model.fit(x_train, y_train, batch_size=50, epochs=50)
 
-        filename = f"{key}.sav"
-        pickle.dump(model, open(models_path + filename, "wb"))
+        # filename = f"{key}.pb"
+        filepath = models_path + key
+        tf.keras.models.save_model(
+            model,
+            filepath,
+            overwrite=True,
+            include_optimizer=True,
+            save_format="h5",
+            signatures=None,
+            options=None,
+            save_traces=True,
+        )
+        # pickle.dump(model, open(models_path + filename, "wb"))
 
 
 def predict_price():
@@ -144,8 +160,12 @@ def predict_price():
         X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
 
         # Get the predicted scaled price
-        filename = f"{key}.sav"
-        loaded_model = pickle.load(open(models_path + filename, "rb"))
+        filename = key
+        model_path = models_path + filename
+
+        loaded_model = tf.keras.models.load_model(model_path)
+
+        # loaded_model = pickle.load(open(models_path + filename, "rb"))
         pred_price = loaded_model.predict(X_test)
 
         # undo the scaling
