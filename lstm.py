@@ -22,12 +22,17 @@ import requests
 """
 PATHS
 """
-
+cwd = os.getcwd()
+directory = "datasets\\"
+path = os.path.join(cwd, directory)
+dataset_path = path
+close_price_path = os.path.join(cwd, "close_prices\\")
+models_path = os.path.join(cwd, "models\\")
 # dataset_path = '/content/gdrive/My Drive/datasets/'
-dataset_path = r"E:\TradeStation\TradeStation\datasets"
-close_price_path = r"E:\TradeStation\TradeStation\close_prices"
+# dataset_path = r"E:\TradeStation\TradeStation\datasets"
+# close_price_path = r"E:\TradeStation\TradeStation\close_prices"
 # close_price_path = '/content/gdrive/My Drive/close_prices/'
-models_path = r"E:\TradeStation\TradeStation\models"
+# models_path = r"E:\TradeStation\TradeStation\models"
 
 ###########################################################
 
@@ -160,7 +165,7 @@ def extract_daily_close_price():
     for key in files_dic.keys():
         url = f"https://finance.yahoo.com/quote/{key}.NS/history?p={key}.NS"
         page = requests.get(url, headers={"User-Agent": "Custom"})
-        soup = BeautifulSoup(page.text, "lxml")
+        soup = BeautifulSoup(page.text, "html.parser")
         price = soup.find("fin-streamer", class_="Fw(b) Fz(36px) Mb(-4px) D(ib)").text
         price = price.replace(",", "")
         price = float(price)
@@ -198,3 +203,6 @@ def percent_change_dic():
         percent_change = (pred_price - true_price) * 100 / true_price
         profit_dic[key] = percent_change
     return profit_dic
+
+prof = percent_change_dic()
+print(prof)
