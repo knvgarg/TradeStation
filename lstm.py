@@ -76,7 +76,7 @@ def retrain_model():
     files_dic = data_cleaning()
     for key in files_dic.keys():
         # Create a new dataframe with only the 'feature' column
-        data = pd.read_pickle(f"{close_price_path + key}.csv")
+        data = pd.read_csv(f"{close_price_path + key}.csv")
 
         # Converting the dataframe to a numpy array
         dataset = data.values
@@ -139,15 +139,16 @@ def predict_price():
     files_dic = data_cleaning()
     for key in files_dic.keys():
         # Create a new dataframe
-        new_df = pd.read_pickle(f"{close_price_path + key}.csv")
+        new_df = pd.read_csv(f"{close_price_path + key}.csv")
 
-        dataset = new_df.values
+        dataset = new_df["Close"].values
+        dataset = dataset.reshape(-1, 1)
 
         # #Scale the all of the data to be values between 0 and 1
         scaler = MinMaxScaler(feature_range=(0, 1))
         scaler.fit(dataset)
         # Get teh last 30 day closing price
-        last_30_days = new_df[-30:].values
+        last_30_days = dataset[-30:]
         # Scale the data to be values between 0 and 1
         last_30_days_scaled = scaler.transform(last_30_days)
         # Create an empty list
@@ -158,7 +159,6 @@ def predict_price():
         X_test = np.array(X_test)
         # Reshape the data
         X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
-
         # Get the predicted scaled price
         filename = key
         model_path = models_path + filename
@@ -197,11 +197,12 @@ def update_dataset():
     prices_dic = extract_daily_close_price()
     files_dic = data_cleaning()
     for key in files_dic.keys():
-        new_df = pd.read_pickle(f"{close_price_path + key}.csv")
+        new_df = pd.read_csv(f"{close_price_path + key}.csv")
         price = prices_dic.get(key)
+        # price = price.replace(",", "")
         qwe = pd.DataFrame([[price]], columns=["Close"])
         new_df = new_df.append(qwe, ignore_index=True)
-        new_df.to_pickle(f"{close_price_path+key}.csv")
+        new_df.to_csv(f"{close_price_path+key}.csv")
 
 
 """profit percent

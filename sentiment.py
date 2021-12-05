@@ -1,7 +1,7 @@
 stocks = [
     "CIPLA",
     "ASIANPAINT",
-    "HDFC",
+    "HDFCBANK",
     "HCLTECH",
     "GAIL",
     "ICICIBANK",
@@ -30,7 +30,7 @@ parameters = [
         "tweet.fields": "created_at,lang",
     },
     {
-        "query": "(HDFCBANK OR HDFC) (lang:en)",
+        "query": "(HDFCBANK) (lang:en)",
         "max_results": "100",
         "tweet.fields": "created_at,lang",
     },
