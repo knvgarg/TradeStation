@@ -16,19 +16,19 @@ today = (datetime.today()).strftime("%Y-%m-%d")
 # -------------------------------------------------------
 
 # ------------------------------------------------------
-stocks = [
-    "AXISBANK",
-    "HDFCBANK",
-    "HEROMOTOCO",
-    "INFY",
-    "BRITANNIA",
-    "BHARTIARTL",
-    "TATASTEEL",
-    "TATAMOTORS",
-]
+# stocks = [
+#     "AXISBANK",
+#     "HDFCBANK",
+#     "HEROMOTOCO",
+#     "INFY",
+#     "BRITANNIA",
+#     "BHARTIARTL",
+#     "TATASTEEL",
+#     "TATAMOTORS",
+# ]
 # for stock in stocks:
-stockDailyValue.query.filter_by(date="2021-11-28").delete()
-db.session.commit()
+# stockDailyValue.query.filter_by(date="2021-11-28").delete()
+# db.session.commit()
 
 # keyword = "gail"
 # data = Transactions.query.filter(Transactions.stock == "GAIL").all()
@@ -46,7 +46,10 @@ db.session.commit()
 
 
 # data = Transactions.query.all()
-# data = Transactions.query.filter_by(userId=2, date="2021-11-21").order_by(Transactions.date).all()
+Transactions.query.filter_by(
+    userId=1, date="2021-12-05", stock="HDFCBANK", type=0
+).delete()
+db.session.commit()
 # for row in data:
 # print(f"{row.id}, {row.stock}, {row.userId}, {row.date}")
 # -------------------------------------------------------

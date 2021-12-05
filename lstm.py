@@ -213,7 +213,6 @@ def percent_change_dic():
     profit_dic = {}
 
     prices_dic = extract_daily_close_price()
-
     predictions = predict_price()
 
     for key in predictions.keys():
@@ -226,5 +225,5 @@ def percent_change_dic():
 
 
 # retrain_model()
-prof = percent_change_dic()
-print(prof)
+# prof = percent_change_dic()
+# print(prof)

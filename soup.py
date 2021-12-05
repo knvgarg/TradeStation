@@ -28,7 +28,7 @@ def refresh_prices():
     table = stockDailyValue.query.filter_by(date=today).all()
 
     if len(table) != 0:
-        print("hekko")
+        # print("hekko")
         for stock in stocks:
             baseurl = "http://google.com/finance/quote/"
             url = baseurl + stock + ":NSE?hl=en&gl=in"

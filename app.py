@@ -20,13 +20,13 @@ dt_string = now.strftime("%Y-%m-%d")
 
 ################################
 pickle_file = open("dictionary.pkl", "rb")
-objects = pickle.load(pickle_file)
+sorted_d = pickle.load(pickle_file)
 pickle_file.close()
 # print(type(objects))
-sorted_d = dict(sorted(objects.items(), key=operator.itemgetter(1), reverse=True))
+# sorted_d = dict(sorted(objects.items(), key=operator.itemgetter(1), reverse=True))
 
-for obj in sorted_d:
-    sorted_d[obj] = round(sorted_d[obj], 2)
+# for obj in sorted_d:
+# sorted_d[obj] = round(sorted_d[obj][0][0], 2)
 ###############################
 
 
@@ -173,6 +173,8 @@ def sell(row_id):
         else:
             current_user.funds = current_user.funds + qty * stk.curr_value
             stk.invested = stk.invested - qty * stk.curr_value
+            if stk.invested < 0:
+                stk.invested = 0
             stk.no_of_stocks = stk.no_of_stocks - qty
             db.session.commit()
             nw = now.strftime("%Y-%m-%d")
