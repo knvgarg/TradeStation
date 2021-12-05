@@ -202,7 +202,7 @@ def update_dataset():
         # price = price.replace(",", "")
         qwe = pd.DataFrame([[price]], columns=["Close"])
         new_df = new_df.append(qwe, ignore_index=True)
-        new_df.to_csv(f"{close_price_path+key}.csv")
+        new_df.to_csv(f"{close_price_path+key}.csv", index=False)
 
 
 """profit percent
