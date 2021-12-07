@@ -93,9 +93,8 @@ def get_predictions():
         neg = Counter(idx)["NEGATIVE"]
 
         change = ((pos - neg) / (pos + neg)) * 100
-        if le<20:
-            change = 0
-        predictions[stk] = change
+
+        predictions[stk] = change * (le / 2400)
 
         print(stk, predictions[stk])
         # print(df)
