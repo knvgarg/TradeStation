@@ -17,6 +17,7 @@ from keras.models import Sequential
 from keras.layers import Dense, LSTM
 from bs4 import BeautifulSoup
 import requests
+import matplotlib.pyplot as plt
 
 #############################################################
 """
@@ -27,6 +28,7 @@ dirname = os.path.dirname(__file__)
 dataset_path = os.path.join(dirname, "datasets\\")
 close_price_path = os.path.join(dirname, "close_prices\\")
 models_path = os.path.join(dirname, "trainedModels\\")
+models_graph = os.path.join(dirname, "static\images1\\")
 
 # directory = "datasets\\"
 # path = os.path.join(cwd, directory)
@@ -116,6 +118,50 @@ def retrain_model():
             options=None,
             save_traces=True,
         )
+
+        tf.keras.models.save_model(
+            model,
+            models_path + key,
+            overwrite=True,
+            include_optimizer=True,
+            save_format="h5",
+            signatures=None,
+            options=None,
+            save_traces=True,
+        )
+
+        test_data = scaled_data[training_data_len - 30 :, :]
+        # #Create the x_test and y_test data sets
+        x_test = []
+        y_test = dataset[
+            training_data_len:, :
+        ]  # Get all of the rows from index 1603 to the
+        for i in range(30, len(test_data)):
+            x_test.append(test_data[i - 30 : i, 0])
+        # #Convert x_test to a numpy array
+        x_test = np.array(x_test)
+        # #Reshape the data into the shape accepted by the LSTM
+        x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
+        # Getting the models predicted price values
+        predictions = model.predict(x_test)
+        predictions = scaler.inverse_transform(predictions)  # Undo scaling
+        # #Calculate/Get the value of RMSE
+        # rmse=np.sqrt(np.mean(((predictions- y_test)**2)))
+        # print('rmse = ', rmse)
+        # #Plot/Create the data for the graph
+        train = data[:training_data_len]
+        valid = data[training_data_len:]
+        valid["Predictions"] = predictions
+        # #Visualize the data
+        plt.figure(figsize=(18, 9))
+        plt.title(key)
+        plt.xlabel("Date", fontsize=18)
+        plt.ylabel("Close Price", fontsize=18)
+        plt.plot(train["Close"])
+        plt.plot(valid[["Close", "Predictions"]])
+        plt.legend(["Train", "Val", "Predictions"], loc="lower right")
+        plt.savefig(f"{models_graph}{key}.png", bbox_inches="tight")
+        # plt.show()
 
 
 def predict_price():
