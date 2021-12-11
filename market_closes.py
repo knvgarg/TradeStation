@@ -1,16 +1,16 @@
 from lstm import retrain_model, update_dataset
-from soup import refresh_prices
+from soup import refresh_prices, refresh_database
 from recommendations import get_recommendations
 
 
 ##### after market closes ########
-# refresh_prices()
-# update_dataset()
+refresh_database()
+update_dataset()
 
 ##### before market opens #######
 # get_recommendations()
-# refresh_prices()
+# refresh_database()
 
 
-###### after 10 days #########
+###### every weekend #########
 # retrain_model()

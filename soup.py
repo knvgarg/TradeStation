@@ -68,3 +68,39 @@ def refresh_prices():
 
 
 # refresh_prices()
+
+
+def refresh_database():
+    table = stockDailyValue.query.filter_by(date=today).all()
+
+    if len(table) != 0:
+        # print("hekko")
+        for stock in stocks:
+            baseurl = "http://google.com/finance/quote/"
+            url = baseurl + stock + ":NSE?hl=en&gl=in"
+            r = requests.get(url)
+
+            soup = BS(r.text, features="html.parser")
+            price = soup.find(class_="YMlKec fxKbKc").text[1:]
+
+            price = float(price.replace(",", ""))
+            data = stockDailyValue.query.filter_by(date=today, sname=stock).first()
+            data.value = price
+            db.session.commit()
+
+    else:
+        for stock in stocks:
+            baseurl = "http://google.com/finance/quote/"
+            url = baseurl + stock + ":NSE?hl=en&gl=in"
+            r = requests.get(url)
+
+            soup = BS(r.text, features="html.parser")
+            price = soup.find(class_="YMlKec fxKbKc").text[1:]
+
+            price = float(price.replace(",", ""))
+
+            data = stockDailyValue(sname=stock, date=today, value=price)
+            db.session.add(data)
+            db.session.commit()
+
+    return
