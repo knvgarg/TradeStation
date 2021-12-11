@@ -4,8 +4,8 @@ from recommendations import get_recommendations
 
 
 ##### after market closes ########
-refresh_database()
-update_dataset()
+# refresh_database()
+# update_dataset()
 
 ##### before market opens #######
 # get_recommendations()
