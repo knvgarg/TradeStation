@@ -11,21 +11,12 @@ def get_recommendations():
     recommeds = {}
 
     for key in sentiment_pred.keys():
-        recommeds[key] = sentiment_pred[key] + lstm_pred[key]
+        if sentiment_pred[key] < 0:
+            recommeds[key] = sentiment_pred[key] + lstm_pred[key]
+        else:
+            recommeds[key] = lstm_pred[key]
 
     sorted_d = dict(sorted(recommeds.items(), key=operator.itemgetter(1), reverse=True))
-
-    # open_file = open("recom.pkl", "wb")
-    # pickle.dump(sorted_d, open_file)
-    # open_file.close()
-
-    # pickle_file = open("dictionary.pkl", "rb")
-    # sorted_d = pickle.load(pickle_file)
-    # pickle_file.close()
-
-    # for obj in sorted_d:
-    #     sorted_d[obj] = round(sorted_d[obj][0][0], 2)
-    #     print(obj, sorted_d[obj])
 
     final_dic = {}
 
