@@ -173,6 +173,7 @@ def sell(row_id):
         else:
             current_user.funds = current_user.funds + qty * stk.curr_value
             stk.invested = stk.invested - qty * stk.curr_value
+            stk.invested = round(stk.invested, 2)
             if stk.invested < 0:
                 stk.invested = 0
             stk.no_of_stocks = stk.no_of_stocks - qty
