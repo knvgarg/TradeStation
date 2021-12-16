@@ -138,6 +138,7 @@ def buy(row_id):
         else:
             current_user.funds = current_user.funds - qty * stk.curr_value
             stk.invested = stk.invested + qty * stk.curr_value
+            stk.invested = round(stk.invested, 2)
             stk.no_of_stocks = stk.no_of_stocks + qty
             db.session.commit()
 
@@ -172,7 +173,8 @@ def sell(row_id):
             flash("You don't have enough Stocks!")
         else:
             current_user.funds = current_user.funds + qty * stk.curr_value
-            stk.invested = stk.invested - qty * stk.curr_value
+            avg = stk.invested / stk.no_of_stocks
+            stk.invested = stk.invested - qty * avg
             stk.invested = round(stk.invested, 2)
             if stk.invested < 0:
                 stk.invested = 0

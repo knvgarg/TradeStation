@@ -18,20 +18,20 @@
 
 </head>
 <script>
-  // $(document).ready(function () {
-  //   var dt = new Date();
-  //   var time = dt.getHours() + ":" + dt.getMinutes();
-  //   // alert(time)
-  //   var sttime = '09:00';
-  //   var endtime = '17:00';
-  //   if (time > sttime && time < endtime) {
+  $(document).ready(function () {
+    var dt = new Date();
+    var time = dt.getHours() + ":" + dt.getMinutes();
+    // alert(time)
+    var sttime = '09:00';
+    var endtime = '17:00';
+    if (time > sttime && time < endtime) {
 
-  //   }
-  //   else {
-  //     $(".buybtn").prop("disabled", true);
-  //     $(".sellbtn").prop("disabled", true);
-  //   }
-  // });
+    }
+    else {
+      $(".buybtn").prop("disabled", true);
+      $(".sellbtn").prop("disabled", true);
+    }
+  });
 </script>
 
 <body style="overflow-x: hidden;">
