@@ -1,5 +1,5 @@
 # TradeStation
-#### Real time stock market prediction to get the best stock to invest in, cnsidering the public sentiments. 
+#### Real time stock market prediction to get the best stock to invest in, considering the public sentiments. 
 ##### We aim to provide minimum risk prediction.
 <br>
 
